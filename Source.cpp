@@ -2,6 +2,11 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Shader.h"
 #include "stb_image.h"
 
@@ -73,7 +78,7 @@ int main()
 	// texture coord attribute
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-
+	
 	stbi_set_flip_vertically_on_load(true);
 	unsigned int texture1, texture2;
 	glGenTextures(1, &texture1);
@@ -124,9 +129,14 @@ int main()
 	ourShader.use();
 	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
 	ourShader.setInt("texture2", 1);
-
+	
 	while (!glfwWindowShouldClose(window))
-	{	
+	{
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 		processInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
