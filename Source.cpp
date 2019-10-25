@@ -13,8 +13,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
- GLfloat SCR_WIDTH = 800.00f;
- GLfloat SCR_HEIGHT = 600.00f;
+ const unsigned int SCR_WIDTH = 800;
+ const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
@@ -142,7 +142,7 @@ int main()
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.f);
+		projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.f);
 
 		
 		int modelLoc = glGetUniformLocation(ourShader.ID, "model");
