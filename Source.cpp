@@ -16,6 +16,15 @@ void processInput(GLFWwindow* window);
  const unsigned int SCR_WIDTH = 800;
  const unsigned int SCR_HEIGHT = 600;
 
+ // camera settings 
+ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+ glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+ // delta time for balance the camera on all pc
+ float deltaTime = 0.0f; // time between current frame and last frame
+ float lastFrame = 0.0f; // time of last frame
+
 int main()
 {
 	// init GLF Window
@@ -183,30 +192,19 @@ int main()
 	glEnable(GL_DEPTH_TEST);  
 	
 	while (!glfwWindowShouldClose(window))
-	{
+	{	
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 		processInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//camera
-		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-		glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-		glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-		glm::vec3 up = glm::vec3(0.0, 1.0f, 0.0f);
-		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-		//rotate camera
-		float radius = 10.0f;
-		float camX = sin(glfwGetTime()) * radius;
-		float camZ = cos(glfwGetTime()) * radius;
 	
 		// projection matrix
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		glm::mat4 view = glm::lookAt(glm::vec3(camX, 0.0, camZ),
-			glm::vec3(0.0, 0.0, 0.0),
-			glm::vec3(0.0, 1.0, 0.0));
+		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.f);
@@ -244,6 +242,16 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	float cameraSpeed = 2.5f * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
