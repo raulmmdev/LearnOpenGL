@@ -49,5 +49,8 @@
     <None Include="shader.fs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="lamp.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
