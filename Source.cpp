@@ -31,7 +31,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
  float deltaTime = 0.0f; // time between current frame and last frame
  float lastFrame = 0.0f; // time of last frame
 
- glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+ //glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
@@ -152,6 +152,11 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 
+		float lightX = 2.0f * sin(glfwGetTime());
+		float lightY = -0.3f;
+		float lightZ = 1.5f * cos(glfwGetTime());
+		glm::vec3 lightPos = glm::vec3(lightX, lightY, lightZ);
+
 		ourShader.use();
 		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
@@ -178,6 +183,7 @@ int main()
 		model = glm::mat4(1.0f); 
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f));
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0));
 		lampShader.setMat4("model", model);
 
 		glBindVertexArray(lightVAO);
