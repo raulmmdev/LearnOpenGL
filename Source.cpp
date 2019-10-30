@@ -150,14 +150,25 @@ int main()
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		glm::vec3 lightColor;
+		lightColor.x = sin(glfwGetTime() * 2.0f);
+		lightColor.y = sin(glfwGetTime() * 0.7f);
+		lightColor.z = sin(glfwGetTime() * 1.3f);
+
+		// for decrease the influence
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		// low influence
+		glm::vec3 ambientcolor = diffuseColor * glm::vec3(0.2f);
 	
 		ourShader.use();
 		ourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
 		ourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
 		ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		ourShader.setFloat("material.shininess", 32.0f);
-		ourShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-		ourShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.2f);
+		ourShader.setVec3("light.ambient", ambientcolor);
+		ourShader.setVec3("light.diffuse", diffuseColor);
 		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		ourShader.setVec3("lightPos", lightPos);
 		ourShader.setVec3("viewPos", camera.Position);
