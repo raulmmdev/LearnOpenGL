@@ -144,10 +144,12 @@ int main()
 
 	unsigned int diffuseMap = loadTexture("container2.png");
 	unsigned int specularMap = loadTexture("container2_specular.png");
+	unsigned int emissionMap = loadTexture("matrix_emission.jpg");
 
 	ourShader.use();
 	ourShader.setInt("material.diffuse", 0);
 	ourShader.setInt("material.specular", 1);
+	ourShader.setInt("material.emission", 2);
 
 	
 	while (!glfwWindowShouldClose(window))
@@ -186,6 +188,9 @@ int main()
 		//bind specular map texture
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularMap);
+		//bind emission map texture
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, emissionMap);
 
 
 		//render cube
