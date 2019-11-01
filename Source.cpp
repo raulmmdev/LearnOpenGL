@@ -222,7 +222,7 @@ int main()
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
-		lampShader.use();
+		/*lampShader.use();
 		lampShader.setMat4("projection", projection);
 		lampShader.setMat4("view", view);
 		model = glm::mat4(1.0f); 
@@ -231,7 +231,7 @@ int main()
 		lampShader.setMat4("model", model);
 
 		glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 36);*/
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
