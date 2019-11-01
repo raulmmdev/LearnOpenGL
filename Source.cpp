@@ -111,6 +111,18 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 	};
 
+	glm::vec3 cubePositions[] = {
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f,  2.0f, -2.5f),
+	glm::vec3(1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	unsigned int VBO, VAO;
 
@@ -162,13 +174,13 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ourShader.use();
-		ourShader.setFloat("material.shininess", 64.0f);
+		ourShader.setFloat("material.shininess", 32.0f);
 		//ourShader.setVec3("light.ambient", ambientcolor);
 		//ourShader.setVec3("light.diffuse", diffuseColor);
 		ourShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		ourShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		ourShader.setVec3("light.position", lightPos);
+		ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
 		ourShader.setVec3("viewPos", camera.Position);
 		// projection matrix
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -178,7 +190,7 @@ int main()
 		ourShader.setMat4("view", view);
 		//world transformation
 		glm::mat4 model = glm::mat4(1.0f);
-		ourShader.setMat4("model", model);
+		//ourShader.setMat4("model", model);
 
 		//bind diffuse map
 		glActiveTexture(GL_TEXTURE0);
@@ -190,7 +202,17 @@ int main()
 
 		//render cube
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			ourShader.setMat4("model", model);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 		lampShader.use();
