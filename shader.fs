@@ -42,20 +42,20 @@ void main()
 		float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
 		// ambient
-		vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
+		vec3 ambient = light.ambient * texture(material.diffuse, TexCoords).rgb;
 
 		//diffuse
 		vec3 norm = normalize(Normal);
 		
 		float diff = max(dot(norm,lightDir), 0.0);
-		vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse,TexCoords));
+		vec3 diffuse = light.diffuse * diff * texture(material.diffuse,TexCoords).rgb;
 	
 		// specular
 		vec3 viewDir = normalize(viewPos - FragPos);
 		vec3 reflectDir = reflect(-lightDir, norm);
 		//calculate specular component
 		float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-		vec3 specular =  light.specular * spec * (vec3(1.0) - vec3(texture(material.specular, TexCoords)));
+		vec3 specular =  light.specular * spec * texture(material.specular, TexCoords).rgb;
 
 		//ambient *= attenuation;
 		diffuse *= attenuation;
