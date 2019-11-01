@@ -180,7 +180,9 @@ int main()
 		ourShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		ourShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		ourShader.setVec3("light.position", lightPos);
+		ourShader.setVec3("light.position", camera.Position);
+		ourShader.setVec3("light.direction", camera.Front);
+		ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
 		ourShader.setFloat("light.constant", 1.0f);
 		ourShader.setFloat("light.linear", 0.09f);
 		ourShader.setFloat("light.quadratic", 0.032f);
