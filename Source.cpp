@@ -61,7 +61,7 @@ int main()
 	}
 
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_ALWAYS);
+	glDepthFunc(GL_LESS);
 
 	Shader ourShader("depth-testing.vs", "shader.fs");
 
