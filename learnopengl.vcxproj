@@ -179,6 +179,7 @@ copy $(OutDir)$(TargetFileName) $(SolutionDir)</Command>
     <None Include="lamp.vs" />
     <None Include="shader.fs" />
     <None Include="shader.vs" />
+    <None Include="ShaderSingleColor.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
