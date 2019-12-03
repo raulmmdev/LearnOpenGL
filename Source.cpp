@@ -187,7 +187,7 @@ int main()
 	// TODO on the tutorial start with a fresh project i can use the model class instead
 	unsigned int cubeTexture = loadTexture("marble.jpg");
 	unsigned int floorTexture = loadTexture("metal.png");
-	unsigned int grassTexture = loadTexture("grass.png");
+	unsigned int grassTexture = loadTexture("blending_transparent_window.png");
 	
 	ourShader.use();
 	ourShader.setInt("texture1", 0);
