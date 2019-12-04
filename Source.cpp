@@ -11,6 +11,7 @@
 #include "stb_image.h"
 #include "Camera.h"
 #include "Model.h"
+#include <map>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -146,6 +147,14 @@ int main()
 	vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
 	vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
 
+	//sorting transparent object
+	std::map<float, glm::vec3> sorted;
+	for (unsigned int i = 0; i < vegetation.size(); i++)
+	{
+		float distance = glm::length(camera.Position - vegetation[i]);
+		sorted[distance] = vegetation[i];
+	}
+
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
@@ -271,10 +280,10 @@ int main()
 		//grass 
 		glBindVertexArray(vegetationVAO);
 		glBindTexture(GL_TEXTURE_2D, grassTexture);
-		for (unsigned int i = 0; i < vegetation.size(); i++)
+		for (std::map<float,glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 		{
 			model = glm::mat4(1.0f);
-			model = glm::translate(model, vegetation[i]);
+			model = glm::translate(model, it->second);
 			ourShader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
