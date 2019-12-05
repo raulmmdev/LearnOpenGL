@@ -72,7 +72,7 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
+	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 
 	Shader ourShader("shader.vs", "shader.fs");
