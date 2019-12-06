@@ -175,6 +175,8 @@ copy $(OutDir)$(TargetFileName) $(SolutionDir)</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="depth-testing.vs" />
+    <None Include="framebuffer.fs" />
+    <None Include="framebuffer.vs" />
     <None Include="lamp.fs" />
     <None Include="lamp.vs" />
     <None Include="shader.fs" />

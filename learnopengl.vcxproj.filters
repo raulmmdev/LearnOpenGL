@@ -73,5 +73,11 @@
     <None Include="ShaderSingleColor.fs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="framebuffer.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="framebuffer.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
