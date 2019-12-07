@@ -180,6 +180,9 @@ int main()
 	// TODO on the tutorial start with a fresh project i can use the model class instead
 	unsigned int cubeTexture = loadTexture("container.jpg");
 
+	Model ourModel("nanosuit.obj");
+
+
 	vector<std::string> faces
 	{
 		"skybox/right.jpg",
@@ -223,11 +226,12 @@ int main()
 		ourShader.setVec3("cameraPos", camera.Position);
 
 		//cubes
-		glBindVertexArray(cubeVAO);
+		/*glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
+		glBindVertexArray(0);*/
+		ourModel.Draw(ourShader);
 		
 		//skybox
 		glDepthFunc(GL_LEQUAL);
