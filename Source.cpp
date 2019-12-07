@@ -233,7 +233,7 @@ int main()
 		glDepthFunc(GL_LEQUAL);
 		skyboxShader.use();
 		skyboxShader.setMat4("projection", projection);
-		skyboxShader.setMat4("view", view);
+		skyboxShader.setMat4("view",  glm::mat4(glm::mat3(camera.GetViewMatrix())));
 
 		glBindVertexArray(skyVAO);
 		glActiveTexture(GL_TEXTURE0);
