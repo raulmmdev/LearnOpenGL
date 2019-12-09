@@ -64,7 +64,8 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader ourShader("shader.vs", "shader.fs", "shaderModel.gs");
+	Shader ourShader("shader.vs", "shader.fs");
+	Shader normalShader("normalVector.vs", "normalVector.fs", "normalVector.gs");
 
 	Model ourModel("nanosuit.obj");
 
@@ -108,9 +109,15 @@ int main()
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("model", model);
 		ourShader.setMat4("view", view);
-		ourShader.setFloat("time", glfwGetTime());
 
 		ourModel.Draw(ourShader);
+
+		normalShader.use();
+		normalShader.setMat4("projection", projection);
+		normalShader.setMat4("model", model);
+		normalShader.setMat4("view", view);
+
+		ourModel.Draw(normalShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
