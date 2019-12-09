@@ -185,6 +185,7 @@ copy $(OutDir)$(TargetFileName) $(SolutionDir)</Command>
     <None Include="shader.fs" />
     <None Include="shader.gs" />
     <None Include="shader.vs" />
+    <None Include="shaderModel.gs" />
     <None Include="ShaderSingleColor.fs" />
     <None Include="skybox.fs" />
     <None Include="skybox.vs" />
