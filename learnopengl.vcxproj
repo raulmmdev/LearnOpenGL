@@ -183,6 +183,7 @@ copy $(OutDir)$(TargetFileName) $(SolutionDir)</Command>
     <None Include="lamp.vs" />
     <None Include="red.fs" />
     <None Include="shader.fs" />
+    <None Include="shader.gs" />
     <None Include="shader.vs" />
     <None Include="ShaderSingleColor.fs" />
     <None Include="skybox.fs" />
