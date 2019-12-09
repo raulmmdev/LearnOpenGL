@@ -64,7 +64,7 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader ourShader("shader.vs", "shader.fs");
+	Shader ourShader("shader.vs", "shader.fs", "shader.gs");
 
 	float points[] = {
 		-0.5f,  0.5f, // top-left
