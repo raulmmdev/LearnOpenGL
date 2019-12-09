@@ -103,5 +103,14 @@
     <None Include="shaderModel.gs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="normalVector.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="normalVector.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="normalVector.gs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
