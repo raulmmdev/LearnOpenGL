@@ -85,5 +85,17 @@
     <None Include="skybox.fs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="red.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="green.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="blue.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="yellow.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

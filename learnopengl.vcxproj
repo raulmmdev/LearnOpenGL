@@ -174,16 +174,20 @@ copy $(OutDir)$(TargetFileName) $(SolutionDir)</Command>
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="blue.fs" />
     <None Include="depth-testing.vs" />
     <None Include="framebuffer.fs" />
     <None Include="framebuffer.vs" />
+    <None Include="green.fs" />
     <None Include="lamp.fs" />
     <None Include="lamp.vs" />
+    <None Include="red.fs" />
     <None Include="shader.fs" />
     <None Include="shader.vs" />
     <None Include="ShaderSingleColor.fs" />
     <None Include="skybox.fs" />
     <None Include="skybox.vs" />
+    <None Include="yellow.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
