@@ -64,54 +64,13 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	Shader shaderRed("shader.vs", "red.fs");
-	Shader shaderGreen("shader.vs", "green.fs");
-	Shader shaderBlue("shader.vs", "blue.fs");
-	Shader shaderYellow("shader.vs", "yellow.fs");
+	Shader ourShader("shader.vs", "shader.fs");
 
-	float cubeVertices[] = {
-		// positions         
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
+	float points[] = {
+		-0.5f,  0.5f, // top-left
+		 0.5f,  0.5f, // top-right
+		 0.5f, -0.5f, // bottom-right
+		-0.5f, -0.5f  // bottom-left
 	};
 
 	// cube VAO
@@ -120,20 +79,9 @@ int main()
 	glGenBuffers(1, &cubeVBO);
 	glBindVertexArray(cubeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-
-	unsigned int uniformBlockIndexRed = glGetUniformBlockIndex(shaderRed.ID, "Matrices");
-	unsigned int uniformBlockIndexGreen = glGetUniformBlockIndex(shaderGreen.ID, "Matrices");
-	unsigned int uniformBlockIndexBlue = glGetUniformBlockIndex(shaderBlue.ID, "Matrices");
-	unsigned int uniformBlockIndexYellow = glGetUniformBlockIndex(shaderYellow.ID, "Matrices");
-
-	glUniformBlockBinding(shaderRed.ID, uniformBlockIndexRed, 0);
-	glUniformBlockBinding(shaderGreen.ID, uniformBlockIndexGreen, 0);
-	glUniformBlockBinding(shaderBlue.ID, uniformBlockIndexBlue, 0);
-	glUniformBlockBinding(shaderYellow.ID, uniformBlockIndexYellow, 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2* sizeof(float), (void*)0);
 
 	unsigned int uboMatrices;
 	glGenBuffers(1, &uboMatrices);
@@ -168,31 +116,11 @@ int main()
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		// RED
+		ourShader.use();
 		glBindVertexArray(cubeVAO);
-		shaderRed.use();
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-0.75f, 0.75f, 0.0f)); // move top-left
-		shaderRed.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// GREEN
-		shaderGreen.use();
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.75f, 0.75f, 0.0f)); // move top-right
-		shaderGreen.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// BLUE
-		shaderBlue.use();
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-0.75f, -0.75f, 0.0f)); // move bottom-left
-		shaderBlue.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// YELLOW
-		shaderYellow.use();
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.75f, -0.75f, 0.0f)); // move bottom-right
-		shaderYellow.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		ourShader.setMat4("model", model);
+		glDrawArrays(GL_POINTS, 0, 4);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
