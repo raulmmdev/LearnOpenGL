@@ -184,6 +184,8 @@ copy $(OutDir)$(TargetFileName) $(SolutionDir)</Command>
     <None Include="normalVector.fs" />
     <None Include="normalVector.gs" />
     <None Include="normalVector.vs" />
+    <None Include="planet.fs" />
+    <None Include="planet.vs" />
     <None Include="red.fs" />
     <None Include="shader.fs" />
     <None Include="shader.gs" />
