@@ -67,59 +67,39 @@ int main()
 	Shader ourShader("shader.vs", "shader.fs");
 	//Shader normalShader("normalVector.vs", "normalVector.fs", "normalVector.gs");
 
-	glm::vec2 translations[100];
-	int index = 0;
-	float offset = 0.1f;
-	//100 translation vectors that contains a translation vector for all positions in a 10x10 grid
-	for (int y = -10; y < 10; y += 2)
+	Model planet("planet.obj");
+	Model rock("rock.obj");
+
+	unsigned int amount = 1000;
+	glm::mat4* modelMatrices;
+	modelMatrices = new glm::mat4[amount];
+	srand(glfwGetTime());
+	float radius = 50.0;
+	float offset = 2.5f;
+	for (unsigned int i = 0; i < amount; i++)
 	{
-		for (int x = -10; x < 10; x += 2)
-		{
-			glm::vec2 translation;
-			translation.x = (float)x / 10.0f + offset;
-			translation.y = (float)y / 10.0f + offset;
-			translations[index++] = translation;
+		glm::mat4 model = glm::mat4(1.0f);
+		// translation: displace along circle with 'radius' in range [-offset, offset]
+		float angle = (float)i / (float)amount * 360.0f;
+		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float x = sin(angle) * radius + displacement;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y, z));
 
-		}
+		// scale between 0.05 and 0.25
+		float scale = (rand() % 20) / 100.0f + 0.05;
+		model = glm::scale(model, glm::vec3(scale));
+
+		// add random rotation around a (semi)randomly picked rotation axis vector
+		float rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+		//add to list of matrices
+		modelMatrices[i] = model;
 	}
-	// new vertex buffer for translations using instanced arrays
-	unsigned int instanceVBO;
-	glGenBuffers(1, &instanceVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 100, &translations[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	
-	float quadVertices[] = {
-		// positions     // colors
-		-0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
-		 0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
-		-0.05f, -0.05f,  0.0f, 0.0f, 1.0f,
-
-		-0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
-		 0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
-		 0.05f,  0.05f,  0.0f, 1.0f, 1.0f
-	};
-
-	// cube VAO
-	unsigned int cubeVAO, cubeVBO;
-	glGenVertexArrays(1, &cubeVAO);
-	glGenBuffers(1, &cubeVBO);
-	glBindVertexArray(cubeVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
-
-	// set its vertex attribute and enable it
-	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glVertexAttribDivisor(2, 1);
-
-
 
 	while (!glfwWindowShouldClose(window))
 	{	
@@ -131,39 +111,29 @@ int main()
 		
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		// projection matrix into uniform block
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 100.0f);
+
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 		glm::mat4 view = camera.GetViewMatrix();;
-		glm::mat4 model = glm::mat4(1.0f);
-
 		ourShader.use();
-		/*for (unsigned int i = 0; i < 100; i++)
-		{
-			stringstream ss;
-			string index;
-			ss << i;
-			index = ss.str();
-			ourShader.setVec2(("offsets[" + index + "]").c_str(), translations[i]);
-		}*/
-		/*ourShader.setMat4("projection", projection);
-		ourShader.setMat4("model", model);
-		ourShader.setMat4("view", view);*/
+		ourShader.setMat4("projection", projection);
+		ourShader.setMat4("view", view);
 
-		/*normalShader.use();
-		normalShader.setMat4("projection", projection);
-		normalShader.setMat4("model", model);
-		normalShader.setMat4("view", view);*/
-		glBindVertexArray(cubeVAO);
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
-		glBindVertexArray(0);
+		//draw planet
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		ourShader.setMat4("model", model);
+		planet.Draw(ourShader);
+
+		for (unsigned int i = 0; i < amount; i++)
+		{
+			ourShader.setMat4("model", modelMatrices[i]);
+			rock.Draw(ourShader);
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &cubeVAO);
-	glDeleteBuffers(1, &cubeVBO);
 
 	glfwTerminate();
 	return 0;
