@@ -65,29 +65,48 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	Shader ourShader("shader.vs", "shader.fs");
-	Shader normalShader("normalVector.vs", "normalVector.fs", "normalVector.gs");
+	//Shader normalShader("normalVector.vs", "normalVector.fs", "normalVector.gs");
 
-	Model ourModel("nanosuit.obj");
+	float quadVertices[] = {
+		// positions     // colors
+		-0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
+		 0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
+		-0.05f, -0.05f,  0.0f, 0.0f, 1.0f,
 
-	float points[] = {
-		-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // top-left
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // top-right
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // bottom-right
-		-0.5f, -0.5f, 1.0f, 1.0f, 0.0f  // bottom-left
+		-0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
+		 0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
+		 0.05f,  0.05f,  0.0f, 1.0f, 1.0f
 	};
 
 	// cube VAO
-	/*unsigned int cubeVAO, cubeVBO;
+	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &cubeVBO);
 	glBindVertexArray(cubeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), &points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
-	glBindVertexArray(0);*/
+	glBindVertexArray(0);
+
+	glm::vec2 translations[100];
+	int index = 0;
+	float offset = 0.1f;
+	//100 translation vectors that contains a translation vector for all positions in a 10x10 grid
+	for (int y = -10; y < 10; y+=2)
+	{
+		for (int x = -10; x < 10; x+=2)
+		{
+			glm::vec2 translation;
+			translation.x = (float)x / 10.0f + offset;
+			translation.y = (float)y / 10.0f + offset;
+			translations[index++] = translation;
+
+		}
+
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{	
@@ -106,25 +125,31 @@ int main()
 		glm::mat4 model = glm::mat4(1.0f);
 
 		ourShader.use();
+		for (unsigned int i = 0; i < 100; i++)
+		{
+			stringstream ss;
+			string index;
+			ss << i;
+			index = ss.str();
+			ourShader.setVec2(("offsets[" + index + "]").c_str(), translations[i]);
+		}
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("model", model);
 		ourShader.setMat4("view", view);
 
-		ourModel.Draw(ourShader);
-
-		normalShader.use();
+		/*normalShader.use();
 		normalShader.setMat4("projection", projection);
 		normalShader.setMat4("model", model);
-		normalShader.setMat4("view", view);
-
-		ourModel.Draw(normalShader);
+		normalShader.setMat4("view", view);*/
+		glBindVertexArray(cubeVAO);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);  
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	/*glDeleteVertexArrays(1, &cubeVAO);
-	glDeleteBuffers(1, &cubeVBO);*/
+	glDeleteVertexArrays(1, &cubeVAO);
+	glDeleteBuffers(1, &cubeVBO);
 
 	glfwTerminate();
 	return 0;
