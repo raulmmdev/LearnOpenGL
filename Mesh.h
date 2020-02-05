@@ -22,6 +22,7 @@ struct Texture {
 class Mesh
 {
 public:
+	unsigned int VAO;
 	//mesh data
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
@@ -32,7 +33,7 @@ public:
 private:
 	vector<Texture> textures;
 	//render data
-	unsigned int VAO, VBO, EBO;
+	unsigned int VBO, EBO;
 	
 	void setupMes();
 };
